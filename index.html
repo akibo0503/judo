@@ -39,7 +39,7 @@
     min-height:100vh;
   }
   header{
-    background:var(--navy);color:#fff;padding:10px 16px;
+    background:var(--header-bg,var(--navy));color:#fff;padding:10px 16px;
     position:sticky;top:0;z-index:10;box-shadow:0 1px 5px rgba(0,0,0,.1);
   }
   header .title{display:flex;align-items:center;gap:12px;}
@@ -93,6 +93,9 @@
   .mark-lose{background:#c0392b;}
   .mark-draw{background:#6b6b6b;}
   .bout-body{flex:1;min-width:0;}
+  .bout-copy{flex-shrink:0;align-self:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:#fff;border:1.5px solid var(--line);color:var(--navy);border-radius:10px;padding:6px 8px;font-size:16px;font-family:inherit;cursor:pointer;min-width:54px;min-height:46px;-webkit-tap-highlight-color:transparent;}
+  .bout-copy span{font-size:11px;font-weight:700;}
+  .bout-copy:active{background:var(--paper);}
   .bout-top{font-size:16px;font-weight:700;color:var(--navy);}
   .bout-sub{font-size:13px;color:var(--muted);word-break:break-word;}
   .mate-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#7d3c98;border-radius:8px;padding:1px 7px;margin-left:5px;vertical-align:middle;}
@@ -296,7 +299,9 @@
 
   .empty{text-align:center;color:var(--muted);padding:36px 12px;font-size:17px;}
   .month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px;}
-  .month-nav .lbl{font-size:20px;font-weight:700;color:var(--navy);}
+  .month-nav .lbl{color:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;text-align:center;}
+  .month-nav .lbl .fy-main{font-size:21px;font-weight:700;}
+  .month-nav .lbl .fy-sub{font-size:13px;font-weight:600;color:var(--muted);margin-top:3px;}
   .month-nav button{min-width:56px;min-height:48px;font-size:24px;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:12px;font-weight:700;}
 
   /* 時刻クイック選択 */
@@ -333,6 +338,9 @@
 
   .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;align-items:flex-end;justify-content:center;}
   .modal-bg.show{display:flex;}
+  /* 削除確認は常に最前面・予定編集はアーカイブより前面に */
+  #confirmModal{z-index:70;}
+  #schedModal{z-index:55;}
   .modal{background:#fff;width:100%;max-width:680px;border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;}
   .modal h3{font-size:21px;margin:0 0 12px;color:var(--navy);}
   .modal .row{display:flex;gap:10px;margin-top:18px;}
@@ -354,6 +362,28 @@
   html[data-color="sakura"]{--navy:#b03a6b;--navy-light:#c85788;--gold:#e0a94f;--paper:#fbf0f4;--paper-card:#fff;--ink:#3a2630;--muted:#8a6b76;--green:#2e7d4f;--red:#c0392b;--amber:#e08a2e;--line:#f2dde6;}
   html[data-color="wakaba"]{--navy:#0e7268;--navy-light:#16998c;--gold:#ff8a5b;--paper:#eef7f4;--paper-card:#fff;--ink:#1e2a28;--muted:#5f6b68;--green:#2e7d4f;--red:#c0392b;--amber:#f08a3c;--line:#d6e8e3;}
   html[data-color="fuji"]{--navy:#6a4c93;--navy-light:#8466b0;--gold:#d9a441;--paper:#f3f0f9;--paper-card:#fff;--ink:#281f33;--muted:#66607a;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e4dcef;}
+  /* グラデーション（ヘッダー背景はJSで--header-bgを付与）*/
+  html[data-color="sunset"]{--navy:#8a3a63;--navy-light:#a8547e;--gold:#ffd9a8;--paper:#fbf1ec;--paper-card:#fff;--ink:#3a2230;--muted:#8a6b74;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#f0ddd5;}
+  html[data-color="ocean"]{--navy:#16567a;--navy-light:#1f7a9c;--gold:#9fe0d6;--paper:#eef5f6;--paper-card:#fff;--ink:#1e2a2d;--muted:#5f6b6d;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#d6e6e8;}
+  html[data-color="freshgreen"]{--navy:#1f6043;--navy-light:#2f8f5e;--gold:#bfe6a0;--paper:#eef5ee;--paper-card:#fff;--ink:#1e2a23;--muted:#5f6b62;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#d8e6d8;}
+  html[data-color="aurora"]{--navy:#3a2c7a;--navy-light:#5b4aa0;--gold:#9fe6da;--paper:#f1f0f9;--paper-card:#fff;--ink:#241f3a;--muted:#66607a;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e2def0;}
+  html[data-color="sakuragrad"]{--navy:#a83e6b;--navy-light:#c25e87;--gold:#ffe1ec;--paper:#fbf0f4;--paper-card:#fff;--ink:#3a2630;--muted:#8a6b76;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#f2dde6;}
+  html[data-color="goldluxe"]{--navy:#2a2620;--navy-light:#4a4332;--gold:#e6c878;--paper:#f4f2ec;--paper-card:#fff;--ink:#241f1a;--muted:#6b6258;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e6e0d4;}
+  html[data-color="dusk"]{--navy:#3a3a72;--navy-light:#4a4a86;--gold:#ffb98a;--paper:#f1f1f8;--paper-card:#fff;--ink:#22253a;--muted:#62647a;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#dee0ef;}
+  html[data-color="flame"]{--navy:#8a2a22;--navy-light:#a83a2e;--gold:#ffd08a;--paper:#f8efe9;--paper-card:#fff;--ink:#34211d;--muted:#7a625c;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#efdcd2;}
+  html[data-color="lagoon"]{--navy:#0f6a64;--navy-light:#1f9a8a;--gold:#bfeede;--paper:#eef6f3;--paper-card:#fff;--ink:#1c2a27;--muted:#5f6b66;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#d6e8e1;}
+  html[data-color="grape"]{--navy:#5a2a7a;--navy-light:#7a3a9e;--gold:#f0b6e0;--paper:#f4f0f9;--paper-card:#fff;--ink:#281f33;--muted:#665f7a;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e7def0;}
+  /* テーマ柄 */
+  html[data-color="night"]{--navy:#1a214d;--navy-light:#2f3a72;--gold:#e6c86e;--paper:#eef0f6;--paper-card:#fff;--ink:#1c2030;--muted:#5f6678;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#dde0ec;}
+  html[data-color="stripe"]{--navy:#1a2b4a;--navy-light:#2d4373;--gold:#c8a44d;--paper:#f5f2ea;--paper-card:#fff;--ink:#222222;--muted:#6b6b6b;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e0dccf;}
+  html[data-color="dots"]{--navy:#1f2f54;--navy-light:#2d4373;--gold:#cfe0ff;--paper:#eef1f8;--paper-card:#fff;--ink:#1c2233;--muted:#5f6678;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#dde2ef;}
+  html[data-color="grid"]{--navy:#1f4e3a;--navy-light:#2f7050;--gold:#bfe6c0;--paper:#eef5ef;--paper-card:#fff;--ink:#1e2a24;--muted:#5f6b63;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#d8e6da;}
+  html[data-color="checker"]{--navy:#1a2b4a;--navy-light:#2d4373;--gold:#c8a44d;--paper:#f2f3f7;--paper-card:#fff;--ink:#222222;--muted:#6b6b6b;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e0dccf;}
+  html[data-color="vstripe"]{--navy:#1f6043;--navy-light:#277a52;--gold:#cfe9b0;--paper:#eef5ee;--paper-card:#fff;--ink:#1e2a23;--muted:#5f6b62;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#d8e6d8;}
+  html[data-color="akane"]{--navy:#5a2746;--navy-light:#7a3a60;--gold:#e8b6cf;--paper:#f6f0f3;--paper-card:#fff;--ink:#2a1c25;--muted:#6b5b64;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e6dbe2;}
+  html[data-color="zigzag"]{--navy:#1a2b4a;--navy-light:#2d4373;--gold:#c8a44d;--paper:#f3f3f7;--paper-card:#fff;--ink:#222222;--muted:#6b6b6b;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#e0dccf;}
+  html[data-color="seigaiha"]{--navy:#1f5a6e;--navy-light:#2f7a90;--gold:#bfe6e0;--paper:#eef5f6;--paper-card:#fff;--ink:#1e2a2d;--muted:#5f6b6d;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#d6e6e8;}
+  html[data-color="confetti"]{--navy:#22243a;--navy-light:#3a3c5e;--gold:#ffd9a8;--paper:#f1f1f6;--paper-card:#fff;--ink:#1e2030;--muted:#5f6172;--green:#2e7d4f;--red:#c0392b;--amber:#d68910;--line:#dfe0ec;}
 
   /* ===================== 着せ替え：かたち（3種）===================== */
   /* シャープ：角を立て、影を控えめに */
@@ -401,7 +431,9 @@
   html[data-shape="pop"] .card{box-shadow:0 2px 12px rgba(0,0,0,.10) !important;}
 
   /* ===================== テーマ選択UI ===================== */
-  .theme-color-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:8px 0 4px;}
+  .theme-color-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:6px 0 4px;}
+  .theme-cat-label{font-size:13px;font-weight:700;color:var(--muted);margin:14px 0 2px;}
+  .theme-cat-label:first-child{margin-top:4px;}
   .theme-sw{position:relative;aspect-ratio:1/1;border-radius:12px;border:3px solid transparent;padding:0;cursor:pointer;overflow:hidden;display:flex;flex-direction:column;background:#fff;}
   .theme-sw .sw-main{flex:1;width:100%;}
   .theme-sw .sw-acc{height:32%;width:100%;}
@@ -648,7 +680,10 @@
 
   <div id="listMatchView" style="display:none">
     <div class="card">
-      <h3 style="margin:0 0 6px;color:var(--navy);font-size:18px">試合結果</h3>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">
+        <h3 style="margin:0;color:var(--navy);font-size:18px">試合結果</h3>
+        <button class="chip-btn" onclick="openMatchSearch()">🔍 検索</button>
+      </div>
       <p class="list-mini" id="matchSummaryHint">仲間をタップすると、その人の試合結果がすべて表示されます。</p>
       <div id="matchMemberList" style="margin-top:10px"></div>
     </div>
@@ -681,11 +716,9 @@
   </div>
   <div class="card">
     <h3 style="margin-top:0;color:var(--navy)">デザイン（着せ替え）</h3>
-    <p class="list-mini">色は10種類、かたちは3種類。自由に組み合わせられます。タップですぐに反映され、この端末に記憶されます。</p>
+    <p class="list-mini">ヘッダーの色を選べます（単色・グラデーション・柄）。タップですぐに反映され、この端末に記憶されます。</p>
     <label class="fld">カラー：<span id="themeColorName" style="color:var(--navy);font-weight:700"></span></label>
-    <div class="theme-color-grid" id="themeColorGrid"></div>
-    <label class="fld">かたち：<span id="themeShapeName" style="color:var(--navy);font-weight:700"></span></label>
-    <div class="theme-shape-row" id="themeShapeRow"></div>
+    <div id="themeColorGrid"></div>
   </div>
   <div class="card">
     <h3 style="margin-top:0;color:var(--navy)">データの保存・共有</h3>
@@ -896,14 +929,12 @@
     <label class="fld">試合区分</label>
     <input type="text" id="bDivision" placeholder="例 学年別／無差別">
     <label class="fld">回戦</label>
-    <input type="text" id="bRound" placeholder="例 2回戦／準決勝／決勝">
-    <label class="fld">勝敗</label>
-    <div class="cat-pick" id="bResultPick"></div>
-    <label class="fld">決まり技</label>
-    <input type="text" id="bWaza" placeholder="例 大外刈／優勢／不戦">
+    <div class="cat-pick" id="bRoundPicks"></div>
+    <input type="text" id="bRound" placeholder="例 2回戦／準決勝（その他は自由入力）" oninput="renderBRoundPicks()">
+    <div style="text-align:right;margin-top:6px"><button type="button" class="btn ghost sm" onclick="openMatchPreset()">よく使う「回戦」を編集</button></div>
     <label class="fld">対戦相手</label>
     <div class="io-pick">
-      <button id="mateOff" class="on" onclick="pickOppMate(false)">通常</button>
+      <button id="mateOff" class="on" onclick="pickOppMate(false)">対外戦</button>
       <button id="mateOn" onclick="pickOppMate(true)">同門対決</button>
     </div>
     <div id="oppNormalWrap">
@@ -921,6 +952,14 @@
       <label class="fld">対戦相手の組手</label>
       <div class="cat-pick" id="bGripPick"></div>
     </div>
+    <label class="fld">勝敗</label>
+    <div class="cat-pick" id="bResultPick"></div>
+    <label class="fld">内容</label>
+    <div class="cat-pick" id="bGradePicks"></div>
+    <input type="text" id="bGrade" placeholder="例 一本／技あり（その他は自由入力）" oninput="renderBGradePicks()">
+    <div style="text-align:right;margin-top:6px"><button type="button" class="btn ghost sm" onclick="openMatchPreset()">よく使う「内容」を編集</button></div>
+    <label class="fld">決まり技</label>
+    <input type="text" id="bWaza" placeholder="例 大外刈／背負投／不戦">
     <label class="fld">備考（任意）</label>
     <input type="text" id="bNote" placeholder="例 旗判定2-1">
     <div class="row">
@@ -928,6 +967,43 @@
       <button class="btn gold" onclick="saveBout()">保存する</button>
     </div>
     <button class="btn del-full" id="boutDeleteBtn" onclick="deleteBout()">この試合を削除する</button>
+  </div>
+</div>
+
+<!-- 試合「回戦・内容」プリセット編集モーダル -->
+<div class="modal-bg" id="gradePresetModal">
+  <div class="modal">
+    <h3 style="margin-top:0">よく使う「回戦」「内容」</h3>
+    <p class="list-mini">試合入力でボタン表示する候補を、それぞれ6つまで登録できます。空欄のままでもOKです。</p>
+    <label class="fld">回戦（6つ）</label>
+    <div id="roundPresetInputs"></div>
+    <label class="fld">内容（6つ）</label>
+    <div id="gradePresetInputs"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ghost" onclick="closeModal('gradePresetModal')">やめる</button>
+      <button class="btn gold" onclick="saveMatchPresets()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 試合結果 検索モーダル -->
+<div class="modal-bg" id="matchSearchModal">
+  <div class="modal">
+    <h3 style="margin-top:0">試合結果を検索</h3>
+    <label class="fld">検索する項目</label>
+    <select id="searchField" onchange="runMatchSearch()">
+      <option value="self">仲間名</option>
+      <option value="opp">対戦相手名</option>
+      <option value="team">対戦チーム名</option>
+      <option value="sched">大会名</option>
+      <option value="waza">決まり技名</option>
+    </select>
+    <label class="fld">検索ワード（部分一致）</label>
+    <input type="text" id="searchWord" oninput="runMatchSearch()" placeholder="入力すると自動で絞り込みます">
+    <div id="searchResults" style="margin-top:12px"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ghost full" onclick="closeModal('matchSearchModal')">閉じる</button>
+    </div>
   </div>
 </div>
 
@@ -943,10 +1019,11 @@
       <label class="fld">試合区分</label>
       <input type="text" id="cdDivision" placeholder="例 学年別／無差別">
       <label class="fld">回戦</label>
-      <input type="text" id="cdRound" placeholder="例 2回戦／準決勝／決勝">
+      <div class="cat-pick" id="cdRoundPicks"></div>
+      <input type="text" id="cdRound" placeholder="例 2回戦／準決勝（その他は自由入力）" oninput="renderCdRoundPicks()">
       <label class="fld">同門対決（紅白戦など）</label>
       <div class="io-pick">
-        <button id="cardMateOff" class="on" onclick="pickCardMate(false)">通常</button>
+        <button id="cardMateOff" class="on" onclick="pickCardMate(false)">対外戦</button>
         <button id="cardMateOn" onclick="pickCardMate(true)">同門対決</button>
       </div>
       <label class="fld" id="cdOppTeamLabel">対戦相手チーム</label>
@@ -1017,6 +1094,7 @@ let DB={
   schedPresets:{types:['練習','大会','イベント','昇級審査'],times:['09:00','10:00','18:00','19:00'],places:['','','','']},
   feePresets:[2000,3000,0,0],
   feeOverrides:{},
+  matchPresets:{rounds:['1回戦','2回戦','3回戦','準々決勝','準決勝','決勝'],grades:['一本','技あり','合わせ技一本','優勢勝ち','反則勝ち','指導差']},
   themeColor:'indigo',
   themeShape:'round',
   matchResults:{}
@@ -1037,6 +1115,9 @@ function load(){try{const s=localStorage.getItem(STORE_KEY);if(s)DB=Object.assig
   if(!DB.feePresets)DB.feePresets=[2000,3000,0,0];
   if(!DB.feeOverrides)DB.feeOverrides={};
   if(!DB.themeColor)DB.themeColor='indigo';
+  if(!DB.matchPresets||typeof DB.matchPresets!=='object')DB.matchPresets={};
+  if(!Array.isArray(DB.matchPresets.rounds))DB.matchPresets.rounds=['1回戦','2回戦','3回戦','準々決勝','準決勝','決勝'];
+  if(!Array.isArray(DB.matchPresets.grades))DB.matchPresets.grades=['一本','技あり','合わせ技一本','優勢勝ち','反則勝ち','指導差'];
   if(!DB.themeShape)DB.themeShape='round';
   // 旧ロゴ（赤丸の旧マーク・180x180）を新ロゴ（赤丸なし・虎拡大）へ自動更新
   if(DB.logo && DB.logo.indexOf('SUhEUgAAALQAAAC0CAIAAACyr5Fl')!==-1) DB.logo=DEFAULT_LOGO;
@@ -1285,7 +1366,7 @@ function saveCash(){
   }
   save();closeModal('cashModal');renderCash();toast(editingCash?'更新しました':'記録しました');
 }
-function delCash(id){DB.cash=DB.cash.filter(x=>x.id!==id);save();renderCash();toast('削除しました');}
+function delCash(id){askConfirm('この入出金の記録を削除します。この操作は取り消せません。',()=>{DB.cash=DB.cash.filter(x=>x.id!==id);save();renderCash();toast('削除しました');});}
 function renderCash(){
   const[y,m]=cashMonth.split('-');
   document.getElementById('cashMonthLbl').textContent=`${y}年 ${Number(m)}月`;
@@ -1402,24 +1483,24 @@ function saveSched(){
   }else{
     DB.schedule.push({id:uid(),name,title,date,time,place,note,color,showMatch:pickedShowMatch});
   }
-  schedYear=Number(date.slice(0,4));
+  schedYear=schedFY(date);
   save();closeModal('schedModal');renderSched();toast(editingSched?'予定を更新しました':'予定を追加しました');
 }
 function deleteSchedFromModal(){
   if(!editingSched)return;
   const s=DB.schedule.find(x=>x.id===editingSched);
   if(!s)return;
-  pendingDeleteSched=editingSched;
-  document.getElementById('confirmText').innerHTML=`「${esc(s.name)}（${s.date.replace(/-/g,'/')}）」を削除します。この操作は取り消せません。`;
-  document.getElementById('confirmModal').dataset.kind='sched';
-  document.getElementById('confirmYesBtn').textContent='削除する';
-  openModal('confirmModal');
+  const id=editingSched;
+  askConfirm(`「${esc(s.name)}（${s.date.replace(/-/g,'/')}）」を削除します。この操作は取り消せません。`,()=>{
+    DB.schedule=DB.schedule.filter(x=>x.id!==id);
+    save();closeModal('schedModal');renderSched();toast('予定を削除しました');
+  });
 }
 function delSched(id){DB.schedule=DB.schedule.filter(s=>s.id!==id);save();renderSched();toast('予定を削除しました');}
 
 /* ===== 試合結果 ===== */
 const RESULT_MARKS=['○','▲','×']; // 勝ち/負け/引分
-const GRIP_OPTS=['右','左','他'];
+const GRIP_OPTS=['右','左','他','不明'];
 let curMatchSched=null; // 対象スケジュールid
 let curSheet='individual';
 let editingBout=null;
@@ -1474,11 +1555,51 @@ function renderMatchList(){
       <div class="bout-mark mark-${b.result==='○'?'win':b.result==='▲'?'lose':'draw'}">${b.result}</div>
       <div class="bout-body">
         <div class="bout-top">${esc(studentName(b.selfId))}${parts?'　<span class=\"bout-sub\">'+parts+'</span>':''}</div>
-        <div class="bout-sub">${b.waza?esc(b.waza):''}${oppName?'　vs '+esc(oppName)+oppExtra:''}${(()=>{const g=boutOppGrip(b);return g?'（'+esc(g)+'組み）':'';})()}</div>
+        <div class="bout-sub">${(b.grade||b.waza)?esc([b.grade,b.waza].filter(x=>x&&x.trim()).join('／')):''}${oppName?'　vs '+esc(oppName)+oppExtra:''}${(()=>{const g=boutOppGrip(b);return g?'（'+esc(g)+'組み）':'';})()}</div>
         ${b.note?'<div class="bout-sub">'+esc(b.note)+'</div>':''}
       </div>
+      <button class="bout-copy" onclick="event.stopPropagation();copyBout('${b.id}')">📋<span>コピー</span></button>
     </div>`;
   }).join('');
+}
+function gradeOpts(){return ((DB.matchPresets&&DB.matchPresets.grades)||[]).filter(x=>x&&x.trim());}
+function roundOpts(){return ((DB.matchPresets&&DB.matchPresets.rounds)||[]).filter(x=>x&&x.trim());}
+function renderBGradePicks(){
+  const el=document.getElementById('bGrade'); if(!el)return;
+  const v=el.value.trim();
+  document.getElementById('bGradePicks').innerHTML=gradeOpts().map(g=>`<button type="button" class="${g===v?'on':''}" onclick="pickBGrade('${esc(g)}')">${esc(g)}</button>`).join('');
+}
+function pickBGrade(g){const el=document.getElementById('bGrade');el.value=(el.value.trim()===g)?'':g;renderBGradePicks();}
+function renderBRoundPicks(){
+  const el=document.getElementById('bRound'); if(!el)return;
+  const v=el.value.trim();
+  document.getElementById('bRoundPicks').innerHTML=roundOpts().map(g=>`<button type="button" class="${g===v?'on':''}" onclick="pickBRound('${esc(g)}')">${esc(g)}</button>`).join('');
+}
+function pickBRound(g){const el=document.getElementById('bRound');el.value=(el.value.trim()===g)?'':g;renderBRoundPicks();}
+function openMatchPreset(){
+  const mk=(arr,cls)=>{let h='';for(let i=0;i<6;i++){h+=`<input type="text" class="preset-inp ${cls}" value="${esc((arr&&arr[i])||'')}" placeholder="${cls==='round-inp'?'回戦':'内容'} ${i+1}">`;}return h;};
+  document.getElementById('roundPresetInputs').innerHTML=mk((DB.matchPresets&&DB.matchPresets.rounds),'round-inp');
+  document.getElementById('gradePresetInputs').innerHTML=mk((DB.matchPresets&&DB.matchPresets.grades),'grade-inp');
+  openModal('gradePresetModal');
+}
+function saveMatchPresets(){
+  const rounds=[...document.getElementById('roundPresetInputs').querySelectorAll('.round-inp')].map(i=>i.value.trim());
+  const grades=[...document.getElementById('gradePresetInputs').querySelectorAll('.grade-inp')].map(i=>i.value.trim());
+  DB.matchPresets={rounds,grades};
+  save(); closeModal('gradePresetModal');
+  renderBRoundPicks(); renderBGradePicks();
+  if(curCard&&document.getElementById('cardModal').classList.contains('show'))buildDetail();
+  toast('保存しました');
+}
+let boutPrefill=null;
+function copyBout(id){
+  const m=ensureMatch(curMatchSched);
+  const b=m.individual.find(x=>x.id===id);
+  if(!b)return;
+  // 選手・試合区分・回戦のみ引き継ぎ、対戦相手以下（勝敗・内容・決まり技・備考）は空にする
+  boutPrefill={selfId:b.selfId,division:b.division||'',round:b.round||''};
+  openBoutModal(null);
+  toast('コピーしました。対戦相手と結果を入力してください');
 }
 function openBoutModal(boutId){
   editingBout=boutId||null;
@@ -1494,6 +1615,7 @@ function openBoutModal(boutId){
     document.getElementById('bDivision').value=b.division||'';
     document.getElementById('bRound').value=b.round||'';
     pickedResult=b.result||'○';
+    document.getElementById('bGrade').value=b.grade||'';
     document.getElementById('bWaza').value=b.waza||'';
     document.getElementById('bOppName').value=b.oppName||'';
     document.getElementById('bOppAffil').value=b.oppAffil||'';
@@ -1503,20 +1625,23 @@ function openBoutModal(boutId){
     pickOppMate(pickedOppMate);
     if(pickedOppMate)document.getElementById('bOppId').value=b.oppId||'';
   }else{
-    document.getElementById('boutModalTitle').textContent='試合を記録';
-    if(DB.students[0])document.getElementById('bSelfId').value=DB.students[0].id;
-    document.getElementById('bDivision').value='';
-    document.getElementById('bRound').value='';
-    pickedResult='○';
-    document.getElementById('bWaza').value='';
-    document.getElementById('bOppName').value='';
-    document.getElementById('bOppAffil').value='';
-    pickedGrip='右';
-    document.getElementById('bNote').value='';
-    pickedOppMate=false;
-    pickOppMate(false);
+    const pf=boutPrefill; boutPrefill=null;
+    document.getElementById('boutModalTitle').textContent=pf?'試合を記録（コピー）':'試合を記録';
+    document.getElementById('bSelfId').value=(pf&&pf.selfId)||(DB.students[0]?DB.students[0].id:'');
+    document.getElementById('bDivision').value=(pf&&pf.division)||'';
+    document.getElementById('bRound').value=(pf&&pf.round)||'';
+    pickedResult=(pf&&pf.result)||'○';
+    document.getElementById('bGrade').value=(pf&&pf.grade)||'';
+    document.getElementById('bWaza').value=(pf&&pf.waza)||'';
+    document.getElementById('bOppName').value=(pf&&pf.oppName)||'';
+    document.getElementById('bOppAffil').value=(pf&&pf.oppAffil)||'';
+    pickedGrip=(pf&&pf.grip)||'右';
+    document.getElementById('bNote').value=(pf&&pf.note)||'';
+    pickedOppMate=!!(pf&&pf.oppIsMate===true);
+    pickOppMate(pickedOppMate);
+    if(pickedOppMate)document.getElementById('bOppId').value=(pf&&pf.oppId)||'';
   }
-  renderResultPick();renderGripPick();
+  renderResultPick();renderGripPick();renderBGradePicks();renderBRoundPicks();
   document.getElementById('boutDeleteBtn').style.display=editingBout?'block':'none';
   openModal('boutModal');
 }
@@ -1569,6 +1694,7 @@ function saveBout(){
     division:document.getElementById('bDivision').value.trim(),
     round:document.getElementById('bRound').value.trim(),
     result:pickedResult,
+    grade:document.getElementById('bGrade').value.trim(),
     waza:document.getElementById('bWaza').value.trim(),
     oppIsMate:pickedOppMate,
     oppId:pickedOppMate?oppId:'',
@@ -1584,9 +1710,12 @@ function saveBout(){
 }
 function deleteBout(){
   if(!editingBout)return;
-  const m=ensureMatch(curMatchSched);
-  m.individual=m.individual.filter(x=>x.id!==editingBout);
-  save();closeModal('boutModal');renderMatchList();toast('削除しました');
+  const id=editingBout;
+  askConfirm('この試合結果を削除します。この操作は取り消せません。',()=>{
+    const m=ensureMatch(curMatchSched);
+    m.individual=m.individual.filter(x=>x.id!==id);
+    save();closeModal('boutModal');renderMatchList();toast('削除しました');
+  });
 }
 
 /* ========== 団体戦（対戦カード）========== */
@@ -1650,11 +1779,12 @@ function renderTeamCards(){
         ${sub?'<div class="bout-sub">'+sub+'</div>':''}
         <div>${badge}</div>
       </div>
+      <button class="bout-copy" onclick="event.stopPropagation();copyCard('${c.id}')">📋<span>コピー</span></button>
     </div>`;
   }).join('');
 }
-function newBout(){return {id:uid(),selfId:'',result:'○',waza:'',oppName:'',oppId:'',grip:'右',note:''};}
-function newRep(){return {id:uid(),selfId:'',result:'○',waza:'',oppName:'',oppId:'',grip:'右',note:''};}
+function newBout(){return {id:uid(),selfId:'',result:'○',grade:'',waza:'',oppName:'',oppId:'',grip:'右',note:''};}
+function newRep(){return {id:uid(),selfId:'',result:'○',grade:'',waza:'',oppName:'',oppId:'',grip:'右',note:''};}
 function openCardModal(cardId){
   curCardId=cardId||null;
   const t=ensureMatch(curMatchSched).team;
@@ -1664,15 +1794,38 @@ function openCardModal(cardId){
   }else{
     curCard={id:uid(),count:5,division:'',round:'',oppTeam:'',oppIsMate:false,bouts:[],tiebreak:'',rep:null};
   }
-  document.getElementById('cardModalTitle').textContent=cardId?'対戦カードを編集':'対戦カードを追加';
+  fillCardStep1('');
+}
+function fillCardStep1(suffix){
+  document.getElementById('cardModalTitle').textContent=(curCardId?'対戦カードを編集':'対戦カードを追加')+(suffix||'');
   document.getElementById('cdCount').value=curCard.count||5;
   document.getElementById('cdDivision').value=curCard.division||'';
   document.getElementById('cdRound').value=curCard.round||'';
   document.getElementById('cdOppTeam').value=curCard.oppTeam||'';
   pickCardMate(curCard.oppIsMate===true);
-  document.getElementById('cardDeleteBtn').style.display=cardId?'block':'none';
+  renderCdRoundPicks();
+  document.getElementById('cardDeleteBtn').style.display=curCardId?'block':'none';
   showCardStep(1);
   openModal('cardModal');
+}
+function renderCdRoundPicks(){
+  const el=document.getElementById('cdRound'); if(!el)return;
+  const v=el.value.trim();
+  document.getElementById('cdRoundPicks').innerHTML=roundOpts().map(g=>`<button type="button" class="${g===v?'on':''}" onclick="pickCdRound('${esc(g)}')">${esc(g)}</button>`).join('');
+}
+function pickCdRound(g){const el=document.getElementById('cdRound');el.value=(el.value.trim()===g)?'':g;renderCdRoundPicks();}
+function copyCard(cardId){
+  const t=ensureMatch(curMatchSched).team;
+  const c=t.cards.find(x=>x.id===cardId); if(!c)return;
+  curCardId=null;   // 新規カードとして作成
+  // 人数・区分・回戦・対戦区分(対外/同門)・出場選手は維持。相手チーム・相手情報・結果(内容/決まり技)は消す
+  curCard={
+    id:uid(), count:c.count||5, division:c.division||'', round:c.round||'',
+    oppTeam:'', oppIsMate:!!c.oppIsMate, tiebreak:'', rep:null,
+    bouts:(c.bouts||[]).map(b=>({id:uid(),selfId:b.selfId||'',result:'○',grade:'',waza:'',oppName:'',oppId:'',grip:'右',note:''}))
+  };
+  fillCardStep1('（コピー）');
+  toast('コピーしました。相手チームと結果を入力してください');
 }
 function showCardStep(n){
   document.getElementById('cardStep1').style.display=n===1?'block':'none';
@@ -1720,6 +1873,22 @@ function resBtnsHtml(b,key){
 function gripBtnsHtml(b,key){
   return GRIP_OPTS.map(g=>`<button type="button" class="${b.grip===g?'on':''}" onclick="pickGrip2('${key}','${g}')">${g}</button>`).join('');
 }
+function teamGradeChips(b,key){
+  const v=b.grade||'';
+  return gradeOpts().map(g=>`<button type="button" class="${g===v?'on':''}" onclick="pickTeamGrade('${key}','${esc(g)}')">${esc(g)}</button>`).join('');
+}
+function pickTeamGrade(key,g){
+  const b=boutByKey(key);if(!b)return;
+  b.grade=(b.grade===g)?'':g;
+  const p=pre(key);
+  const inp=document.getElementById('gradeinp_'+p); if(inp)inp.value=b.grade;
+  const c=document.getElementById('grade_'+p); if(c)c.innerHTML=teamGradeChips(b,key);
+  save();
+}
+function syncTeamGradeChips(key){
+  const b=boutByKey(key);if(!b)return;
+  const c=document.getElementById('grade_'+pre(key)); if(c)c.innerHTML=teamGradeChips(b,key);
+}
 function boutBlockHtml(b,key,isRep){
   const p=pre(key);
   const head=isRep?`<div class="bb-head rep"><span class="pos-no">代表戦</span></div>`
@@ -1734,15 +1903,20 @@ function boutBlockHtml(b,key,isRep){
        <input type="text" value="${esc(b.oppName)}" placeholder="例 山田 一郎" oninput="setBoutField('${key}','oppName',this.value)">
        <span class="bb-label">相手の組手</span>
        <div class="cat-pick" id="grip_${p}">${gripBtnsHtml(b,key)}</div>`;
-  return `<div class="bout-block${isRep?' rep':''}">
+  const gradeWaza=(b.result==='×')?'':`
+    <span class="bb-label">内容</span>
+    <div class="cat-pick" id="grade_${p}">${teamGradeChips(b,key)}</div>
+    <input type="text" id="gradeinp_${p}" value="${esc(b.grade||'')}" placeholder="例 一本／技あり" oninput="setBoutField('${key}','grade',this.value);syncTeamGradeChips('${key}')">
+    <span class="bb-label">決まり技</span>
+    <input type="text" value="${esc(b.waza)}" placeholder="例 大外刈／背負投／不戦" oninput="setBoutField('${key}','waza',this.value)">`;
+  return `<div class="bout-block${isRep?' rep':''}" id="block_${p}">
     ${head}
     <span class="bb-label">選手</span>
     <select onchange="${selfChange}">${opts}</select>
+    ${oppArea}
     <span class="bb-label">勝敗</span>
     <div class="cat-pick" id="res_${p}">${resBtnsHtml(b,key)}</div>
-    <span class="bb-label">決まり技</span>
-    <input type="text" value="${esc(b.waza)}" placeholder="例 大外刈／優勢／不戦" oninput="setBoutField('${key}','waza',this.value)">
-    ${oppArea}
+    ${gradeWaza}
     <span class="bb-label">備考（任意）</span>
     <input type="text" value="${esc(b.note)}" placeholder="例 旗判定2-1" oninput="setBoutField('${key}','note',this.value)">
   </div>`;
@@ -1759,7 +1933,11 @@ function buildDetail(){
 function setBoutField(key,field,val){const b=boutByKey(key);if(b)b[field]=val;}
 function pickResult2(key,v){
   const b=boutByKey(key);if(!b)return;b.result=v;
-  document.getElementById('res_'+pre(key)).innerHTML=resBtnsHtml(b,key);
+  if(v==='×'){b.grade='';b.waza='';}
+  const p=pre(key);
+  const block=document.getElementById('block_'+p);
+  if(block)block.outerHTML=boutBlockHtml(b,key,key==='rep');
+  else document.getElementById('res_'+p).innerHTML=resBtnsHtml(b,key);
   recalcTally();
 }
 function pickGrip2(key,g){
@@ -1815,9 +1993,12 @@ function saveCard(){
 }
 function deleteCard(){
   if(!curCardId){closeModal('cardModal');return;}
-  const t=ensureMatch(curMatchSched).team;
-  t.cards=t.cards.filter(x=>x.id!==curCardId);
-  save();closeModal('cardModal');renderMatchList();toast('削除しました');
+  const id=curCardId;
+  askConfirm('この対戦カード（団体戦）を削除します。含まれる各選手の結果もすべて消えます。この操作は取り消せません。',()=>{
+    const t=ensureMatch(curMatchSched).team;
+    t.cards=t.cards.filter(x=>x.id!==id);
+    save();closeModal('cardModal');renderMatchList();toast('削除しました');
+  });
 }
 // 全試合を選手ごとに集約（個人戦＋団体戦をまたぐ）
 function allBoutsBySelf(){
@@ -1896,7 +2077,7 @@ function showMatchDetail(selfId){
       <div class="bout-body">
         <div class="bout-sub">${head}</div>
         <div class="bout-top">${parts||'　'}</div>
-        <div class="bout-sub">${b.waza?esc(b.waza):''}${oppName?'　vs '+esc(oppName)+oppExtra:''}${(()=>{const g=boutOppGrip(b);return g?'（'+esc(g)+'組み）':'';})()}</div>
+        <div class="bout-sub">${(b.grade||b.waza)?esc([b.grade,b.waza].filter(x=>x&&x.trim()).join('／')):''}${oppName?'　vs '+esc(oppName)+oppExtra:''}${(()=>{const g=boutOppGrip(b);return g?'（'+esc(g)+'組み）':'';})()}</div>
         ${b.note?'<div class="bout-sub">'+esc(b.note)+'</div>':''}
       </div>
     </div>`;
@@ -1909,6 +2090,65 @@ function closeMatchDetail(){
   if(dc)dc.style.display='none';
   const ml=document.getElementById('matchMemberList');
   if(ml)ml.parentElement.style.display='block';
+}
+// 検索用：全試合をフラットに展開（同門の重複ミラーは作らない）
+function allBoutsFlat(){
+  const out=[];
+  Object.keys(DB.matchResults||{}).forEach(schedId=>{
+    const sched=DB.schedule.find(s=>s.id===schedId);
+    const schedName=sched?schedLabel(sched):'(削除)';
+    const schedDate=sched?sched.date:'';
+    const mr=DB.matchResults[schedId];
+    (mr.individual||[]).forEach(b=>out.push({
+      selfName:studentName(b.selfId),oppName:boutOppName(b),team:'',oppAffil:b.oppAffil||'',
+      schedName,schedDate,grade:b.grade||'',waza:b.waza||'',result:b.result,
+      division:b.division||'',round:b.round||'',sheet:'個人戦',oppIsMate:!!b.oppIsMate
+    }));
+    if(mr.team&&Array.isArray(mr.team.cards)){
+      mr.team.cards.forEach(card=>{
+        const pushB=(b,roundOverride)=>out.push({
+          selfName:studentName(b.selfId),oppName:boutOppName(b),team:card.oppTeam||'',oppAffil:card.oppTeam||'',
+          schedName,schedDate,grade:b.grade||'',waza:b.waza||'',result:b.result,
+          division:card.division||'',round:roundOverride||card.round||'',sheet:'団体戦',oppIsMate:!!b.oppIsMate
+        });
+        (card.bouts||[]).forEach(b=>pushB(b));
+        if(card.tiebreak==='rep'&&card.rep)pushB(card.rep,[card.round,'代表戦'].filter(Boolean).join('・'));
+      });
+    }
+  });
+  return out;
+}
+function openMatchSearch(){
+  document.getElementById('searchWord').value='';
+  document.getElementById('searchResults').innerHTML='<div class="empty" style="padding:14px">検索ワードを入力してください</div>';
+  openModal('matchSearchModal');
+  setTimeout(()=>{const el=document.getElementById('searchWord');if(el)el.focus();},150);
+}
+function runMatchSearch(){
+  const field=document.getElementById('searchField').value;
+  const word=document.getElementById('searchWord').value.trim();
+  const box=document.getElementById('searchResults');
+  if(!word){box.innerHTML='<div class="empty" style="padding:14px">検索ワードを入力してください</div>';return;}
+  const w=word.toLowerCase();
+  const getv={self:r=>r.selfName,opp:r=>r.oppName,team:r=>r.team,sched:r=>r.schedName,waza:r=>r.waza};
+  const hits=allBoutsFlat().filter(r=>(getv[field](r)||'').toLowerCase().includes(w))
+    .sort((a,b)=>(b.schedDate||'').localeCompare(a.schedDate||''));
+  if(!hits.length){box.innerHTML='<div class="empty" style="padding:14px">該当する試合結果がありません</div>';return;}
+  box.innerHTML='<div class="list-mini" style="margin-bottom:6px">'+hits.length+'件</div>'+hits.map(r=>{
+    const head=[r.schedDate?r.schedDate.replace(/-/g,'/'):'',esc(r.schedName),r.sheet].filter(Boolean).join('　');
+    const parts=[r.division,r.round].filter(Boolean).map(esc).join('・');
+    const affil=r.team||r.oppAffil;
+    const tail=r.oppIsMate?'<span class="mate-tag">同門</span>':(affil?' / '+esc(affil):'');
+    const gw=[r.grade,r.waza].filter(x=>x&&x.trim()).map(esc).join('／');
+    return `<div class="bout-row" style="cursor:default">
+      <div class="bout-mark mark-${r.result==='○'?'win':r.result==='▲'?'lose':'draw'}">${r.result}</div>
+      <div class="bout-body">
+        <div class="bout-sub">${head}</div>
+        <div class="bout-top">${esc(r.selfName)}${parts?'　<span class="bout-sub">'+parts+'</span>':''}</div>
+        <div class="bout-sub">${gw}${r.oppName?'　vs '+esc(r.oppName)+tail:''}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 /* よく使う設定 */
 function openPresetModal(){
@@ -1937,47 +2177,48 @@ function saveFeePresets(){
   const first=vals.find(v=>v>0);if(first)DB.feeAmount=first; // フォールバック額も同期
   save();closeModal('feePresetModal');toast('保存しました');
 }
-let schedYear=new Date().getFullYear();
+function schedFY(dateStr){const y=+dateStr.slice(0,4),m=+dateStr.slice(5,7);return m>=4?y:y-1;}
+let schedYear=schedFY(todayStr());
 function changeSchedYear(d){schedYear+=d;renderSched();}
-function renderSched(){
-  document.getElementById('schedYearLbl').textContent=`${schedYear}年`;
-  const list=document.getElementById('schedList');
-  const items=[...DB.schedule].filter(i=>i.date.slice(0,4)===String(schedYear)).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));
-  if(items.length===0){list.innerHTML='<div class="empty">'+schedYear+'年の予定はありません</div>';return;}
-  // 月ごとにグループ化
+function schedCardHtml(i){
+  const d=new Date(i.date+'T00:00');
+  const place=(i.place!==undefined)?i.place:(i.meta||'').replace(i.time||'','').trim();
+  const col=i.color||BADGE_COLOR[i.name]||'#2d4373';
+  const noteHtml=i.note?`<span class="tl-note">${esc(i.note)}</span>`:'';
+  const hasResult=DB.matchResults[i.id]&&((DB.matchResults[i.id].individual||[]).length||(DB.matchResults[i.id].team&&(DB.matchResults[i.id].team.cards||[]).length));
+  const showMatch=(i.showMatch===true||i.showMatch===false)?i.showMatch:/試合|大会/.test(i.name||'');
+  const isMatch=showMatch||hasResult;
+  const resultBtn=isMatch?`<button class="result-btn" onclick="event.stopPropagation();openMatchModal('${i.id}')">🥋 試合結果${hasResult?'<span class="result-dot"></span>':''}</button>`:'';
+  return `<div class="tl-card" onclick="openSchedModal('${i.id}')">
+    <div class="tl-daybox" style="background:${col}">
+      <div class="drow"><span class="d">${d.getDate()}</span><span class="w">${weekday(d)}</span></div>
+      ${i.time?`<div class="tm">${esc(i.time)}</div>`:''}
+    </div>
+    <div class="tl-info"><div class="t">${esc(i.name)}${i.title?'<span class="tl-event">'+esc(i.title)+'</span>':''}</div>
+    ${place||i.note?`<div class="meta">${place?esc(place):''}${place&&i.note?' / ':''}${noteHtml}</div>`:''}
+    ${resultBtn}</div>
+    </div>`;
+}
+function schedMonthGroupsHtml(items){
   const groups={};
   items.forEach(i=>{const ym=i.date.slice(0,7);(groups[ym]=groups[ym]||[]).push(i);});
   let html='';
   Object.keys(groups).sort().forEach(ym=>{
     const[y,m]=ym.split('-');
-    let cards='';
-    groups[ym].forEach(i=>{
-      const d=new Date(i.date+'T00:00');
-      const place=(i.place!==undefined)?i.place:(i.meta||'').replace(i.time||'','').trim();
-      const col=i.color||BADGE_COLOR[i.name]||'#2d4373';
-      const noteHtml=i.note?`<span class="tl-note">${esc(i.note)}</span>`:'';
-      // 試合・大会、または既に結果がある予定に「試合結果」ボタンを表示
-      const hasResult=DB.matchResults[i.id]&&((DB.matchResults[i.id].individual||[]).length||(DB.matchResults[i.id].team&&(DB.matchResults[i.id].team.cards||[]).length));
-      // 明示設定があればそれに従う。旧データは種類から自動判定。結果が既にあれば必ず表示
-      const showMatch=(i.showMatch===true||i.showMatch===false)?i.showMatch:/試合|大会/.test(i.name||'');
-      const isMatch=showMatch||hasResult;
-      const resultBtn=isMatch?`<button class="result-btn" onclick="event.stopPropagation();openMatchModal('${i.id}')">🥋 試合結果${hasResult?'<span class="result-dot"></span>':''}</button>`:'';
-      cards+=`<div class="tl-card" onclick="openSchedModal('${i.id}')">
-        <div class="tl-daybox" style="background:${col}">
-          <div class="drow"><span class="d">${d.getDate()}</span><span class="w">${weekday(d)}</span></div>
-          ${i.time?`<div class="tm">${esc(i.time)}</div>`:''}
-        </div>
-        <div class="tl-info"><div class="t">${esc(i.name)}${i.title?'<span class="tl-event">'+esc(i.title)+'</span>':''}</div>
-        ${place||i.note?`<div class="meta">${place?esc(place):''}${place&&i.note?' / ':''}${noteHtml}</div>`:''}
-        ${resultBtn}</div>
-        </div>`;
-    });
+    let cards=''; groups[ym].forEach(i=>{cards+=schedCardHtml(i);});
     html+=`<div class="tl-month">
       <div class="tl-label"><div class="yr">${y}</div><div class="mo">${Number(m)}<small>月</small></div></div>
       <div class="tl-events">${cards}</div>
     </div>`;
   });
-  list.innerHTML=html;
+  return html;
+}
+function renderSched(){
+  const fy=schedYear;
+  document.getElementById('schedYearLbl').innerHTML=`<span class="fy-main">${fy}年度</span><span class="fy-sub">${fy}/4〜${fy+1}/3</span>`;
+  const list=document.getElementById('schedList');
+  const items=[...DB.schedule].filter(i=>schedFY(i.date)===fy).sort((a,b)=>(a.date+(a.time||'')).localeCompare(b.date+(b.time||'')));
+  list.innerHTML=items.length?schedMonthGroupsHtml(items):`<div class="empty">${fy}年度の予定はありません</div>`;
 }
 
 /* 月別一覧マトリクス */
@@ -2033,7 +2274,7 @@ function renderList(){
 }
 function renderYear(){
   const fy=fiscalYear;
-  document.getElementById('fiscalYearLbl').innerHTML=`${fy}年度<br><span style="font-size:15px;color:var(--muted)">（${fy}/4〜${fy+1}/3）</span>`;
+  document.getElementById('fiscalYearLbl').innerHTML=`<span class="fy-main">${fy}年度</span><span class="fy-sub">${fy}/4〜${fy+1}/3</span>`;
   const months=fiscalMonths(fy);
   // --- 会計 ---
   // 月謝収入：各月の支払済人数 × 月謝額
@@ -2386,38 +2627,31 @@ function saveStudent(){
   }
   save();closeModal('studentModal');renderMates();toast('保存しました');
 }
-function delStudent(id){const s=DB.students.find(x=>x.id===id);if(!confirm(`${s.name} を削除しますか？`))return;DB.students=DB.students.filter(x=>x.id!==id);save();renderSettings();toast('削除しました');}
+function delStudent(id){const s=DB.students.find(x=>x.id===id);if(!s)return;askConfirm(`「${esc(s.name)}」を削除します。この操作は取り消せません。`,()=>{DB.students=DB.students.filter(x=>x.id!==id);save();renderSettings();renderMates();toast('削除しました');});}
 let pendingDeleteId=null;
 let pendingDeleteSched=null;
 function deleteStudentFromModal(){
   if(!editingStudent)return;
   const s=DB.students.find(x=>x.id===editingStudent);
   if(!s)return;
-  pendingDeleteId=editingStudent;
-  document.getElementById('confirmModal').dataset.kind='student';
-  document.getElementById('confirmYesBtn').textContent='削除する';
-  document.getElementById('confirmText').innerHTML=`「${esc(s.name)}」を削除します。この操作は取り消せません。<br><br>過去の月謝や出欠の集計金額は保持されますが、集計表からこの方の名前は消えます。<br><br>名簿から見えなくしたいだけなら、削除せず「退会」に設定し、仲間タブの「退会した仲間を表示」をオフにする方法がおすすめです。`;
+  const id=editingStudent;
+  askConfirm(`「${esc(s.name)}」を削除します。この操作は取り消せません。<br><br>過去の月謝や出欠の集計金額は保持されますが、集計表からこの方の名前は消えます。<br><br>名簿から見えなくしたいだけなら、削除せず「退会」に設定し、仲間タブの「退会した仲間を表示」をオフにする方法がおすすめです。`,()=>{
+    DB.students=DB.students.filter(x=>x.id!==id);
+    save();closeModal('studentModal');renderMates();toast('削除しました');
+  });
+}
+let _confirmCb=null;
+function askConfirm(html,onYes,yesLabel){
+  document.getElementById('confirmText').innerHTML=html;
+  const btn=document.getElementById('confirmYesBtn');
+  btn.textContent=yesLabel||'削除する';
+  _confirmCb=onYes;
   openModal('confirmModal');
 }
 function confirmDeleteYes(){
-  const kind=document.getElementById('confirmModal').dataset.kind;
-  if(kind==='restore'){doRestore();return;}
-  if(kind==='sched'){
-    if(pendingDeleteSched){
-      DB.schedule=DB.schedule.filter(s=>s.id!==pendingDeleteSched);
-      pendingDeleteSched=null;
-      save();closeModal('confirmModal');closeModal('schedModal');renderSched();toast('予定を削除しました');
-    }else{closeModal('confirmModal');}
-    return;
-  }
-  if(!pendingDeleteId){closeModal('confirmModal');return;}
-  DB.students=DB.students.filter(x=>x.id!==pendingDeleteId);
-  pendingDeleteId=null;
-  save();
+  const cb=_confirmCb;_confirmCb=null;
   closeModal('confirmModal');
-  closeModal('studentModal');
-  renderMates();
-  toast('削除しました');
+  if(typeof cb==='function')cb();
 }
 function moveStudent(idx,dir){
   const ni=idx+dir;
@@ -2451,16 +2685,36 @@ function uploadLogo(ev){
 function resetLogo(){DB.logo=DEFAULT_LOGO;save();applyLogo();toast('標準のロゴに戻しました');}
 /* ===================== 着せ替え（テーマ）===================== */
 const THEME_COLORS=[
-  {id:'indigo',     name:'藍紺',  p:'#1a2b4a', a:'#c8a44d'},
-  {id:'onyx',       name:'漆黒',  p:'#1f1f23', a:'#d4af37'},
-  {id:'forest',     name:'深緑',  p:'#1f4d3a', a:'#c39b46'},
-  {id:'wine',       name:'葡萄',  p:'#5a2746', a:'#c8a44d'},
-  {id:'steel',      name:'鋼青',  p:'#1f4e5f', a:'#e0a93b'},
-  {id:'sumi',       name:'墨',    p:'#2b2b2b', a:'#c8973a'},
-  {id:'ultramarine',name:'群青',  p:'#21409a', a:'#f0a500'},
-  {id:'sakura',     name:'桜',    p:'#b03a6b', a:'#e0a94f'},
-  {id:'wakaba',     name:'若葉',  p:'#0e7268', a:'#ff8a5b'},
-  {id:'fuji',       name:'藤',    p:'#6a4c93', a:'#d9a441'}
+  {id:'indigo',name:'藍紺',p:'#1a2b4a',a:'#c8a44d',cat:'solid'},
+  {id:'onyx',name:'漆黒',p:'#1f1f23',a:'#d4af37',cat:'solid'},
+  {id:'forest',name:'深緑',p:'#1f4d3a',a:'#c39b46',cat:'solid'},
+  {id:'wine',name:'葡萄',p:'#5a2746',a:'#c8a44d',cat:'solid'},
+  {id:'steel',name:'鋼青',p:'#1f4e5f',a:'#e0a93b',cat:'solid'},
+  {id:'sumi',name:'墨',p:'#2b2b2b',a:'#c8973a',cat:'solid'},
+  {id:'ultramarine',name:'群青',p:'#21409a',a:'#f0a500',cat:'solid'},
+  {id:'sakura',name:'桜',p:'#b03a6b',a:'#e0a94f',cat:'solid'},
+  {id:'wakaba',name:'若葉',p:'#0e7268',a:'#ff8a5b',cat:'solid'},
+  {id:'fuji',name:'藤',p:'#6a4c93',a:'#d9a441',cat:'solid'},
+  {id:'sunset',name:'夕焼け',p:'#8a3a63',a:'#ffd9a8',cat:'gradient',g:'linear-gradient(120deg,#6a2c5a 0%,#c0466b 55%,#ff8a5b 100%)'},
+  {id:'ocean',name:'海',p:'#16567a',a:'#9fe0d6',cat:'gradient',g:'linear-gradient(120deg,#0f3b5c 0%,#1f7a9c 100%)'},
+  {id:'freshgreen',name:'新緑',p:'#1f6043',a:'#bfe6a0',cat:'gradient',g:'linear-gradient(120deg,#16432f 0%,#2f8f5e 100%)'},
+  {id:'aurora',name:'オーロラ',p:'#3a2c7a',a:'#9fe6da',cat:'gradient',g:'linear-gradient(120deg,#2b1e5e 0%,#5b3a9e 45%,#1f8a8a 100%)'},
+  {id:'sakuragrad',name:'桜花',p:'#a83e6b',a:'#ffe1ec',cat:'gradient',g:'linear-gradient(120deg,#8a2f55 0%,#d56a93 60%,#f3b6cf 100%)'},
+  {id:'goldluxe',name:'金襴',p:'#2a2620',a:'#e6c878',cat:'gradient',g:'linear-gradient(120deg,#1c1c22 0%,#3a3320 52%,#caa24a 100%)'},
+  {id:'dusk',name:'黄昏',p:'#3a3a72',a:'#ffb98a',cat:'gradient',g:'linear-gradient(120deg,#1a2b5e 0%,#6a4a8a 55%,#e08a4a 100%)'},
+  {id:'flame',name:'紅蓮',p:'#8a2a22',a:'#ffd08a',cat:'gradient',g:'linear-gradient(120deg,#6a1a1a 0%,#c0392b 55%,#f0a500 100%)'},
+  {id:'lagoon',name:'翡翠',p:'#0f6a64',a:'#bfeede',cat:'gradient',g:'linear-gradient(120deg,#0d4d4d 0%,#1f9a8a 60%,#7fd9b0 100%)'},
+  {id:'grape',name:'葡萄染',p:'#5a2a7a',a:'#f0b6e0',cat:'gradient',g:'linear-gradient(120deg,#2a1a5e 0%,#7a3a9e 55%,#d06ab0 100%)'},
+  {id:'night',name:'夜空',p:'#1a214d',a:'#e6c86e',cat:'pattern',g:'radial-gradient(1.6px 1.6px at 22% 32%,rgba(255,255,255,.85),transparent),radial-gradient(1.4px 1.4px at 64% 24%,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 80% 62%,rgba(255,255,255,.6),transparent),linear-gradient(160deg,#0b1437 0%,#2a2a6e 60%,#4a3a7a 100%)'},
+  {id:'stripe',name:'縞藍',p:'#1a2b4a',a:'#c8a44d',cat:'pattern',g:'repeating-linear-gradient(45deg,#1a2b4a 0 9px,#243760 9px 18px)'},
+  {id:'dots',name:'水玉',p:'#1f2f54',a:'#cfe0ff',cat:'pattern',g:'radial-gradient(circle,rgba(255,255,255,.18) 2px,transparent 3px) 0 0/16px 16px,#1f2f54'},
+  {id:'grid',name:'格子',p:'#1f4e3a',a:'#bfe6c0',cat:'pattern',g:'repeating-linear-gradient(0deg,rgba(255,255,255,.13) 0 1px,transparent 1px 20px),repeating-linear-gradient(90deg,rgba(255,255,255,.13) 0 1px,transparent 1px 20px),#1f4e3a'},
+  {id:'checker',name:'市松',p:'#1a2b4a',a:'#c8a44d',cat:'pattern',g:'conic-gradient(#1a2b4a 25%,#2d4373 0 50%,#1a2b4a 0 75%,#2d4373 0) 0 0/26px 26px'},
+  {id:'vstripe',name:'青縞',p:'#1f6043',a:'#cfe9b0',cat:'pattern',g:'repeating-linear-gradient(90deg,#1f6043 0 12px,#277a52 12px 24px)'},
+  {id:'akane',name:'茜縞',p:'#5a2746',a:'#e8b6cf',cat:'pattern',g:'repeating-linear-gradient(45deg,#5a2746 0 14px,#6e3458 14px 28px)'},
+  {id:'zigzag',name:'山形',p:'#1a2b4a',a:'#c8a44d',cat:'pattern',g:'linear-gradient(135deg,#2d4373 25%,transparent 25%) -14px 0/28px 28px,linear-gradient(225deg,#2d4373 25%,transparent 25%) -14px 0/28px 28px,linear-gradient(315deg,#2d4373 25%,transparent 25%) 0 0/28px 28px,linear-gradient(45deg,#2d4373 25%,transparent 25%) 0 0/28px 28px,#1a2b4a'},
+  {id:'seigaiha',name:'青海波',p:'#1f5a6e',a:'#bfe6e0',cat:'pattern',g:'radial-gradient(circle at 50% 100%,transparent 33%,rgba(255,255,255,.22) 33% 42%,transparent 42%) 0 0/40px 20px,radial-gradient(circle at 50% 100%,transparent 33%,rgba(255,255,255,.22) 33% 42%,transparent 42%) 20px 10px/40px 20px,#1f5a6e'},
+  {id:'confetti',name:'彩',p:'#22243a',a:'#ffd9a8',cat:'pattern',g:'radial-gradient(circle at 15% 25%,#ff8a5b 0 3px,transparent 4px) 0 0/40px 40px,radial-gradient(circle at 55% 60%,#5bd1c4 0 3px,transparent 4px) 0 0/40px 40px,radial-gradient(circle at 80% 35%,#f0c14b 0 3px,transparent 4px) 0 0/40px 40px,radial-gradient(circle at 35% 82%,#e06aa0 0 3px,transparent 4px) 0 0/40px 40px,#22243a'}
 ];
 const THEME_SHAPES=[
   {id:'round', name:'まる',     desc:'やわらか'},
@@ -2468,35 +2722,28 @@ const THEME_SHAPES=[
   {id:'pop',   name:'まんまる', desc:'ポップ'}
 ];
 function applyTheme(){
-  const c=DB.themeColor||'indigo', s=DB.themeShape||'round';
+  const c=DB.themeColor||'indigo';
   document.documentElement.setAttribute('data-color',c);
-  document.documentElement.setAttribute('data-shape',s);
-  // インストール時のテーマ色（メタ）も合わせる
-  const col=THEME_COLORS.find(x=>x.id===c);
-  if(col){const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',col.p);}
+  document.documentElement.setAttribute('data-shape','round');
+  const t=THEME_COLORS.find(x=>x.id===c);
+  // ヘッダーのグラデ・柄背景（単色テーマは解除して--navyにフォールバック）
+  if(t&&t.g)document.documentElement.style.setProperty('--header-bg',t.g);
+  else document.documentElement.style.removeProperty('--header-bg');
+  if(t){const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t.p);}
 }
 function pickThemeColor(id){DB.themeColor=id;save();applyTheme();renderThemePicker();}
-function pickThemeShape(id){DB.themeShape=id;save();applyTheme();renderThemePicker();}
 function renderThemePicker(){
   const grid=document.getElementById('themeColorGrid');
   if(!grid)return;
-  const cur=DB.themeColor||'indigo', curS=DB.themeShape||'round';
-  grid.innerHTML=THEME_COLORS.map(t=>
-    `<button class="theme-sw ${t.id===cur?'on':''}" onclick="pickThemeColor('${t.id}')" title="${t.name}" aria-label="${t.name}">
-       <span class="sw-main" style="background:${t.p}"></span>
+  const cur=DB.themeColor||'indigo';
+  const sw=t=>`<button class="theme-sw ${t.id===cur?'on':''}" onclick="pickThemeColor('${t.id}')" title="${t.name}" aria-label="${t.name}">
+       <span class="sw-main" style="background:${t.g||t.p}"></span>
        <span class="sw-acc" style="background:${t.a}"></span>
-     </button>`).join('');
+     </button>`;
+  const sec=(label,cat)=>`<div class="theme-cat-label">${label}</div><div class="theme-color-grid">${THEME_COLORS.filter(t=>t.cat===cat).map(sw).join('')}</div>`;
+  grid.innerHTML=sec('単色','solid')+sec('グラデーション','gradient')+sec('柄','pattern');
   const curName=(THEME_COLORS.find(x=>x.id===cur)||{}).name||'';
   document.getElementById('themeColorName').textContent=curName;
-  const row=document.getElementById('themeShapeRow');
-  row.innerHTML=THEME_SHAPES.map(s=>
-    `<button class="theme-shape-btn ${s.id===curS?'on':''}" data-s="${s.id}" onclick="pickThemeShape('${s.id}')">
-       <span class="shape-demo"></span>
-       <span class="shape-name">${s.name}</span>
-       <span class="shape-desc">${s.desc}</span>
-     </button>`).join('');
-  const curSName=(THEME_SHAPES.find(x=>x.id===curS)||{}).name||'';
-  document.getElementById('themeShapeName').textContent=curSName;
 }
 /* ===================== パスコードロック（この端末のみ・バックアップ非対象）===================== */
 const LOCK_KEY='judoTeamApp_lock';
@@ -2597,7 +2844,7 @@ function applyLogo(){
 function saveFeeAmount(){const el=document.getElementById('feeAmount');if(!el)return;DB.feeAmount=Number(el.value)||0;save();}
 function saveTeamName(){DB.team=document.getElementById('teamNameInput').value.trim()||'柔道チーム';document.getElementById('teamName').textContent=DB.team;save();}
 function addPlace(){const v=document.getElementById('newPlace').value.trim();if(!v)return;if(!DB.places.includes(v))DB.places.push(v);document.getElementById('newPlace').value='';save();renderSettings();}
-function delPlace(i){DB.places.splice(i,1);save();renderSettings();}
+function delPlace(i){const nm=DB.places[i]||'この場所';askConfirm(`「${esc(nm)}」を場所の一覧から削除します。`,()=>{DB.places.splice(i,1);save();renderSettings();toast('削除しました');});}
 
 /* バックアップ */
 function exportData(){
@@ -2613,10 +2860,7 @@ function importData(ev){
       const d=JSON.parse(e.target.result);
       if(!d.students)throw 0;
       pendingRestoreData=d;
-      document.getElementById('confirmModal').dataset.kind='restore';
-      document.getElementById('confirmYesBtn').textContent='復元する';
-      document.getElementById('confirmText').innerHTML='バックアップから復元します。<br><br>今このアプリに入っているデータ（仲間・出欠・お金・予定など）は、すべてバックアップの内容に上書きされ、元には戻せません。<br><br>復元してよろしいですか？';
-      openModal('confirmModal');
+      askConfirm('バックアップから復元します。<br><br>今このアプリに入っているデータ（仲間・出欠・お金・予定など）は、すべてバックアップの内容に上書きされ、元には戻せません。<br><br>復元してよろしいですか？',doRestore,'復元する');
     }catch(err){toast('ファイルを読めませんでした');}
   };
   r.readAsText(f);ev.target.value='';
@@ -2629,6 +2873,9 @@ function doRestore(){
   if(!DB.feePresets)DB.feePresets=[2000,3000,0,0];
   if(!DB.feeOverrides)DB.feeOverrides={};
   if(!DB.themeColor)DB.themeColor='indigo';
+  if(!DB.matchPresets||typeof DB.matchPresets!=='object')DB.matchPresets={};
+  if(!Array.isArray(DB.matchPresets.rounds))DB.matchPresets.rounds=['1回戦','2回戦','3回戦','準々決勝','準決勝','決勝'];
+  if(!Array.isArray(DB.matchPresets.grades))DB.matchPresets.grades=['一本','技あり','合わせ技一本','優勢勝ち','反則勝ち','指導差'];
   if(!DB.themeShape)DB.themeShape='round';
   if(!DB.matchResults)DB.matchResults={};
   save();closeModal('confirmModal');initUI();toast('復元しました');
@@ -2655,7 +2902,7 @@ function initUI(){
   listMonth=feeMonth;
   cashMonth=feeMonth;
   moneyView='fee';
-  schedYear=new Date().getFullYear();
+  schedYear=schedFY(todayStr());
   applyLogo();
   renderAtt();
 }
