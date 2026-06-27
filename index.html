@@ -1077,6 +1077,8 @@
     </div>
     <label class="fld">項目</label>
     <div class="cat-pick" id="cashCatPick"></div>
+    <input type="text" id="cashCatFree" placeholder="その他（自由記入）" oninput="cashFreeInput()">
+    <div style="text-align:right;margin-top:6px"><button type="button" class="btn ghost sm" onclick="openCashCatEditor()">項目を編集</button></div>
     <label class="fld">金額（円）</label>
     <input type="number" id="cashAmount" inputmode="numeric" placeholder="例：5000">
     <label class="fld">日付</label>
@@ -1086,6 +1088,22 @@
     <div class="row">
       <button class="btn ghost" onclick="closeModal('cashModal')">やめる</button>
       <button class="btn gold" onclick="saveCash()">保存する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 入出金の項目編集モーダル -->
+<div class="modal-bg" id="cashCatModal">
+  <div class="modal">
+    <h3 style="margin-top:0">入出金の項目を編集</h3>
+    <p class="list-mini">収入・支出それぞれ5つまで登録できます。空欄のままでもOK。記録時はここで選ぶか、「その他（自由記入）」で自由に入力できます。</p>
+    <label class="fld">収入の項目（5つ）</label>
+    <div id="cashCatInInputs"></div>
+    <label class="fld">支出の項目（5つ）</label>
+    <div id="cashCatOutInputs"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ghost" onclick="closeModal('cashCatModal')">やめる</button>
+      <button class="btn gold" onclick="saveCashCats()">保存する</button>
     </div>
   </div>
 </div>
@@ -1102,7 +1120,7 @@ let DB={
   fees:{}, schedule:[],
   places:[], metaHistory:[], logo:DEFAULT_LOGO,
   cash:[],
-  cashCats:{in:['寄付','参加費徴収','物販収入','補助金','その他収入'],out:['用具購入','会場費','大会遠征費','審査料','保険料','飲食費','その他支出']},
+  cashCats:{in:['寄付','参加費徴収','物販収入','補助金','その他収入'],out:['用具購入','会場費','遠征費','審査料','その他支出']},
   schedPresets:{types:['練習','大会','イベント','昇級審査'],times:['09:00','10:00','18:00','19:00'],places:['','','','']},
   feePresets:[2000,3000,0,0],
   feeOverrides:{},
@@ -1128,6 +1146,7 @@ function load(){try{const s=localStorage.getItem(STORE_KEY);if(s)DB=Object.assig
   if(!DB.feeOverrides)DB.feeOverrides={};
   if(!DB.themeColor)DB.themeColor='indigo';
   if(!DB.fontScale)DB.fontScale='small';
+  if(!DB.cashCats||!Array.isArray(DB.cashCats.in)||!Array.isArray(DB.cashCats.out))DB.cashCats={in:['寄付','参加費徴収','物販収入','補助金','その他収入'],out:['用具購入','会場費','遠征費','審査料','その他支出']};
   if(!DB.matchPresets||typeof DB.matchPresets!=='object')DB.matchPresets={};
   if(!Array.isArray(DB.matchPresets.rounds))DB.matchPresets.rounds=['1回戦','2回戦','3回戦','準々決勝','準決勝','決勝'];
   if(!Array.isArray(DB.matchPresets.grades))DB.matchPresets.grades=['一本','技あり','合わせ技一本','優勢勝ち','反則勝ち','指導差'];
@@ -1334,22 +1353,56 @@ function pickIO(io){
   pickedIO=io;
   document.getElementById('ioIn').classList.toggle('on',io==='in');
   document.getElementById('ioOut').classList.toggle('on',io==='out');
+  const f=document.getElementById('cashCatFree'); if(f)f.value='';
+  pickedCashCat='';
   renderCashCatPick();
 }
 let pickedCashCat='';
 function renderCashCatPick(){
-  const cats=DB.cashCats[pickedIO]||[];
-  if(!cats.includes(pickedCashCat))pickedCashCat=cats[0];
-  document.getElementById('cashCatPick').innerHTML=cats.map(c=>`<button class="${c===pickedCashCat?'on':''}" onclick="pickCashCat('${esc(c)}')">${esc(c)}</button>`).join('');
+  const cats=(DB.cashCats[pickedIO]||[]).filter(x=>x&&x.trim());
+  const free=document.getElementById('cashCatFree');
+  const freeVal=free?free.value.trim():'';
+  // 自由記入が空のときは、未選択なら先頭を既定選択
+  if(!freeVal && !cats.includes(pickedCashCat)) pickedCashCat=cats[0]||'';
+  document.getElementById('cashCatPick').innerHTML=cats.map(c=>`<button class="${(c===pickedCashCat&&!freeVal)?'on':''}" onclick="pickCashCat('${esc(c)}')">${esc(c)}</button>`).join('');
 }
-function pickCashCat(c){pickedCashCat=c;renderCashCatPick();}
+function pickCashCat(c){
+  pickedCashCat=c;
+  const f=document.getElementById('cashCatFree'); if(f)f.value='';
+  renderCashCatPick();
+}
+function cashFreeInput(){
+  const v=document.getElementById('cashCatFree').value.trim();
+  pickedCashCat=v;        // 自由記入があればそれを項目にする
+  renderCashCatPick();
+}
+function openCashCatEditor(){
+  const mk=(arr,cls)=>{let h='';for(let i=0;i<5;i++){h+=`<input type="text" class="preset-inp ${cls}" value="${esc((arr&&arr[i])||'')}" placeholder="項目 ${i+1}">`;}return h;};
+  document.getElementById('cashCatInInputs').innerHTML=mk(DB.cashCats.in,'cashcat-in');
+  document.getElementById('cashCatOutInputs').innerHTML=mk(DB.cashCats.out,'cashcat-out');
+  openModal('cashCatModal');
+}
+function saveCashCats(){
+  const get=cls=>[...document.querySelectorAll('.'+cls)].map(i=>i.value.trim()).filter(x=>x);
+  const ins=get('cashcat-in'), outs=get('cashcat-out');
+  DB.cashCats={in:ins.length?ins:['その他収入'], out:outs.length?outs:['その他支出']};
+  save(); closeModal('cashCatModal');
+  // 現在選択が無くならないよう再描画
+  const f=document.getElementById('cashCatFree'); if(f)f.value='';
+  pickedCashCat='';
+  renderCashCatPick();
+  toast('保存しました');
+}
 let editingCash=null;
 function openCashModal(id){
   editingCash=id||null;
+  const free=document.getElementById('cashCatFree'); if(free)free.value='';
   if(id){
     const c=DB.cash.find(x=>x.id===id);
     document.getElementById('cashModalTitle').textContent='記録を編集';
     pickedIO=c.io;pickedCashCat=c.cat;
+    // 候補に無い項目は自由記入欄に入れる
+    if(free && !(DB.cashCats[c.io]||[]).includes(c.cat)) free.value=c.cat||'';
     document.getElementById('cashAmount').value=c.amount;
     document.getElementById('cashDate').value=c.date;
     document.getElementById('cashMemo').value=c.memo||'';
@@ -1369,13 +1422,15 @@ function saveCash(){
   const amount=Number(document.getElementById('cashAmount').value)||0;
   const date=document.getElementById('cashDate').value;
   const memo=document.getElementById('cashMemo').value.trim();
+  const free=document.getElementById('cashCatFree');
+  const cat=(free&&free.value.trim())?free.value.trim():pickedCashCat;
   if(amount<=0){toast('金額を入れてください');return;}
   if(!date){toast('日付を選んでください');return;}
   if(editingCash){
     const c=DB.cash.find(x=>x.id===editingCash);
-    c.io=pickedIO;c.cat=pickedCashCat;c.amount=amount;c.date=date;c.memo=memo;
+    c.io=pickedIO;c.cat=cat;c.amount=amount;c.date=date;c.memo=memo;
   }else{
-    DB.cash.push({id:uid(),io:pickedIO,cat:pickedCashCat,amount,date,memo});
+    DB.cash.push({id:uid(),io:pickedIO,cat:cat,amount,date,memo});
   }
   save();closeModal('cashModal');renderCash();toast(editingCash?'更新しました':'記録しました');
 }
@@ -2891,7 +2946,7 @@ function importData(ev){
 function doRestore(){
   const d=pendingRestoreData;pendingRestoreData=null;
   if(!d){closeModal('confirmModal');return;}
-  DB=Object.assign({attendance:{},fees:{},schedule:[],students:[],places:[],metaHistory:[],logo:DEFAULT_LOGO,cash:[],cashCats:{in:['寄付','参加費徴収','物販収入','補助金','その他収入'],out:['用具購入','会場費','大会遠征費','審査料','保険料','飲食費','その他支出']},schedPresets:{types:['練習','大会','イベント','昇級審査'],times:['09:00','10:00','18:00','19:00'],places:['市民体育館','〇〇道場','','']},feePresets:[2000,3000,0,0]},d);
+  DB=Object.assign({attendance:{},fees:{},schedule:[],students:[],places:[],metaHistory:[],logo:DEFAULT_LOGO,cash:[],cashCats:{in:['寄付','参加費徴収','物販収入','補助金','その他収入'],out:['用具購入','会場費','遠征費','審査料','その他支出']},schedPresets:{types:['練習','大会','イベント','昇級審査'],times:['09:00','10:00','18:00','19:00'],places:['市民体育館','〇〇道場','','']},feePresets:[2000,3000,0,0]},d);
   if(!DB.schedPresets)DB.schedPresets={types:['練習','大会','イベント','昇級審査'],times:['09:00','10:00','18:00','19:00'],places:['市民体育館','〇〇道場','','']};
   if(!DB.feePresets)DB.feePresets=[2000,3000,0,0];
   if(!DB.feeOverrides)DB.feeOverrides={};
